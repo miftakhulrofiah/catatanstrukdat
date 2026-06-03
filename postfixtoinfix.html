@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Struktur Data - Postfix to Infix</title>
-    <!-- FontAwesome untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -203,11 +202,11 @@
             border-radius: 12px;
             padding: 20px;
             border: 1px solid #fbcfe8;
-            color: #9d174d;
+            color: #94174d;
             margin-top: 20px;
         }
         
-        .example-box strong { color: #9d174d; }
+        .example-box strong { color: #94174d; }
 
         /* --- Code Block --- */
         .code-block { 
@@ -348,7 +347,7 @@
         .summary-box li { color: var(--success-text); opacity: 0.9; margin-bottom: 8px; }
         .summary-box li:last-child { margin-bottom: 0; }
 
-        /* Responisve */
+        /* Responsive */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; height: auto; }
@@ -409,7 +408,7 @@
                         </ul>
                     </li>
                     <li>Lakukan terus hingga seluruh ekspresi habis dibaca.</li>
-                    <li>Setelah selesai, elemen terakhir yang tersisa di dalam stack adalah hasil akhir ekspresi Infix lengkap.</li>
+                    <li>After completion, the single remaining element inside the stack is the final, fully parenthesized Infix expression.</li>
                 </ol>
                 
                 <div class="example-box">
@@ -427,7 +426,7 @@
                 <p>Diagram di bawah ini menggambarkan bagaimana elemen dipindahkan antara input, stack, dan output selama proses konversi menggunakan contoh <code class="inline">AB+C*</code>.</p>
                 
                 <div class="illustration-container">
-                    <img src="postfixtoinfix.png" alt="Diagram Ilustrasi Konversi Postfix ke Infix">
+                    <img src="postfixtoinfix.png" alt="Diagram conversion of postfix to infix stack logic trail">
                     <div class="illustration-caption">Gambar 1: Alur Logika Konversi Postfix ke Infix dengan Stack string.</div>
                 </div>
             </article>
@@ -530,7 +529,7 @@ Infix   : ((A + (B * C)) - (D / E))<br>
                     </div>
                     <div class="operation-item">
                         <code>f"({operand_b} {char} {operand_a})"</code>
-                        <p>Menggunakan f-string untuk menggabungkan operand kiri, operator saat ini, dan operand kanan, lalu membungkusnya dengan tanda kurung.</p>
+                        <p>Menggunakan f-string untuk menggabungkan operand kiri, operator saat ini, and operand kanan, lalu membungkusnya dengan tanda kurung.</p>
                     </div>
                 </div>
 
