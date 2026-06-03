@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struktur Data - Tree</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: rgba(99, 102, 241, 0.1);
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --sidebar-bg: #1e293b;
+            --sidebar-header: #111827;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-on-primary: #ffffff;
+            --border: #e2e8f0;
+            --code-bg: #0f172a;
+            --code-text: #e2e8f0;
+            --output-bg: #f8fafc;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --success-border: #a7f3d0;
+            --success-text: #065f46;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-main); 
+            color: var(--text-main); 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* --- Sidebar Style --- */
+        .sidebar { 
+            width: 280px; 
+            background: var(--sidebar-bg); 
+            color: #fff; 
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0; 
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header { 
+            padding: 25px 20px; 
+            background: var(--sidebar-header); 
+            border-bottom: 1px solid #334155; 
+            text-align: center;
+        }
+
+        .sidebar-header h2 { 
+            font-size: 1.15rem; 
+            font-weight: 800; 
+            color: #f8fafc; 
+            letter-spacing: 1.5px; 
+            text-transform: uppercase; 
+        }
+
+        .nav-menu { 
+            list-style: none; 
+            overflow-y: auto; 
+            padding: 15px 0; 
+            flex-grow: 1;
+        }
+
+        .nav-menu::-webkit-scrollbar { width: 5px; }
+        .nav-menu::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 10px; }
+
+        .nav-menu li a { 
+            display: flex; 
+            align-items: center; 
+            padding: 12px 25px; 
+            text-decoration: none; 
+            color: #94a3b8; 
+            font-weight: 500; 
+            font-size: 0.95rem;
+            transition: all 0.2s ease; 
+            border-left: 4px solid transparent; 
+        }
+
+        .nav-menu li a i { 
+            margin-right: 15px; 
+            width: 20px; 
+            text-align: center; 
+            font-size: 1.1rem;
+        }
+
+        .nav-menu li a:hover { 
+            background: rgba(255,255,255,0.03); 
+            color: #fff; 
+            padding-left: 30px; 
+        }
+
+        .nav-menu li.active a { 
+            background: var(--primary-light); 
+            color: #a5b4fc; 
+            font-weight: 600; 
+            border-left: 4px solid var(--primary); 
+        }
+
+        /* --- Main Content Style --- */
+        .main-content { 
+            flex: 1; 
+            overflow-y: auto; 
+            scroll-behavior: smooth; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero { 
+            background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%); 
+            color: #fff; 
+            padding: 50px 40px 90px; 
+            flex-shrink: 0;
+        }
+
+        .hero h1 { 
+            font-size: 2.5rem; 
+            font-weight: 800; 
+            margin-bottom: 10px; 
+            letter-spacing: -1px;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .content-wrapper { 
+            max-width: 1000px; 
+            margin: -60px 40px 60px; 
+            position: relative; 
+            flex-grow: 1;
+        }
+
+        .content-card { 
+            background: var(--bg-card); 
+            border-radius: 16px; 
+            padding: 40px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.03); 
+            border: 1px solid var(--border); 
+        }
+
+        .content-card h2 { 
+            font-size: 1.75rem; 
+            margin-bottom: 25px; 
+            display: flex; 
+            align-items: center; 
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .content-card h2::before { 
+            content: ""; 
+            width: 8px; 
+            height: 32px; 
+            background: var(--primary); 
+            margin-right: 15px; 
+            border-radius: 4px; 
+        }
+
+        .content-card h3 {
+            font-size: 1.3rem;
+            margin: 30px 0 15px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .content-card p, .content-card li { 
+            font-size: 1.05rem; 
+            color: var(--text-muted); 
+            line-height: 1.8; 
+            margin-bottom: 15px;
+        }
+
+        ul, ol { margin: 15px 0 20px 25px; }
+        
+        strong { color: var(--text-main); font-weight: 600; }
+
+        .highlight-box { 
+            background: var(--output-bg); 
+            border-radius: 12px; 
+            padding: 25px; 
+            border-left: 5px solid var(--primary); 
+            margin: 30px 0; 
+        }
+
+        /* --- Code Block --- */
+        .code-block { 
+            background: var(--code-bg); 
+            color: var(--code-text); 
+            padding: 25px; 
+            border-radius: 12px; 
+            font-family: 'JetBrains Mono', monospace; 
+            font-size: 0.9rem; 
+            line-height: 1.7; 
+            margin: 25px 0; 
+            overflow-x: auto; 
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        code.inline { 
+            background: #e2e8f0; 
+            color: #b91c1c; 
+            padding: 3px 7px; 
+            border-radius: 5px; 
+            font-family: 'JetBrains Mono', monospace; 
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        /* --- Grid for Explanation --- */
+        .operation-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 20px; 
+            margin: 30px 0; 
+        }
+
+        .operation-item { 
+            background: var(--output-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            padding: 25px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .operation-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+        }
+
+        .operation-item code { 
+            align-self: flex-start; 
+            background: var(--primary); 
+            color: var(--text-on-primary); 
+            padding: 6px 14px; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            font-family: 'JetBrains Mono', monospace; 
+            font-size: 0.9rem;
+        }
+        
+        .operation-item p { margin-bottom: 0; font-size: 0.95rem; }
+
+        /* --- Illustration & Summary --- */
+        .illustration-container {
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            background: #fff;
+        }
+        
+        .illustration-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .summary-box { 
+            background: var(--success-light); 
+            border: 1px solid var(--success-border); 
+            padding: 30px; 
+            border-radius: 16px; 
+            margin-top: 40px; 
+        }
+
+        .summary-box h4 { 
+            color: var(--success-text); 
+            margin-bottom: 15px; 
+            font-size: 1.2rem; 
+            font-weight: 700;
+            display: flex; 
+            align-items: center; 
+        }
+
+        .summary-box h4 i { margin-right: 12px; font-size: 1.3rem; }
+        
+        .summary-box ul { margin-bottom: 0; margin-top: 0; }
+        .summary-box li { color: var(--success-text); opacity: 0.9; margin-bottom: 8px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; }
+            .sidebar-header { padding: 15px; }
+            .nav-menu { flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 10px; }
+            .nav-menu li a { padding: 10px 15px; border-left: none; border-bottom: 3px solid transparent; }
+            .nav-menu li.active a { border-left: none; border-bottom: 3px solid var(--primary); }
+            .content-wrapper { margin: -30px 20px 30px; }
+            .content-card { padding: 25px; }
+            .hero { padding: 40px 20px 70px; text-align: center; }
+            .hero h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header"><h2>Struktur Data</h2></div>
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fa-solid fa-layer-group"></i>Stack</a></li>
+            <li><a href="antrian.html"><i class="fa-solid fa-lines-leaning"></i>Antrian</a></li>
+            <li><a href="doubleantrian.html"><i class="fa-solid fa-people-arrows"></i>Double Antrian</a></li>
+            <li><a href="infixtopostfix.html"><i class="fa-solid fa-arrow-right-arrow-left"></i>Infix to Postfix</a></li>
+            <li><a href="infixtoprefix.html"><i class="fa-solid fa-arrow-right-arrow-left"></i>Infix to Prefix</a></li>
+            <li><a href="postfixtoinfix.html"><i class="fa-solid fa-rotate-left"></i>Postfix to Infix</a></li>
+            <li><a href="prefixtoinfix.html"><i class="fa-solid fa-rotate"></i>Prefix to Infix</a></li>
+            <li><a href="evaluasipostfix.html"><i class="fa-solid fa-calculator"></i>Evaluasi Postfix</a></li>
+            <li><a href="evaluasiprefix.html"><i class="fa-solid fa-calculator"></i>Evaluasi Prefix</a></li>
+            <li><a href="bubblesort.html"><i class="fa-solid fa-arrow-down-short-wide"></i>Bubble Sort</a></li>
+            <li><a href="selectionsort.html"><i class="fa-solid fa-arrow-down-short-wide"></i>Selection Sort</a></li>
+            <li><a href="insertionsort.html"><i class="fa-solid fa-arrow-down-short-wide"></i>Insertion Sort</a></li>
+            <li><a href="hashing.html"><i class="fa-solid fa-hashtag"></i>Hashing</a></li>
+            <li><a href="linkedlist.html"><i class="fa-solid fa-link"></i>Linked List</a></li>
+            <li class="active"><a href="tree.html"><i class="fa-solid fa-tree"></i>Tree</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="hero">
+            <h1>Tree (Pohon)</h1>
+            <p>Konsep Dasar Pohon Berhierarki, Struktur Binary Tree, dan Representasi Data</p>
+        </header>
+
+        <div class="content-wrapper">
+            <article class="content-card">
+                <h2>Pengertian Tree</h2>
+                <p><strong>Tree</strong> adalah struktur data non-linear berhierarki yang terdiri dari sekumpulan elemen terhubung. Komponen pembentuk utamanya meliputi akar (root), cabang (branches), dan daun (leaves).</p>
+                
+                <div class="highlight-box">
+                    <strong>Perbedaan Karakteristik Utama:</strong><br>
+                    • Berbeda dengan pohon alami, pohon dalam ilmu komputer direpresentasikan <strong>terbalik</strong>: posisi <code class="inline">Root</code> berada paling atas, sedangkan posisi <code class="inline">Leaves</code> berada di dasar paling bawah.<br>
+                    • Contoh implementasi paling umum dapat kita temukan pada penataan struktur elemen penampung dokumen web HTML (DOM Tree).
+                </div>
+
+                <div class="illustration-container">
+                    <img src="tree1.png" alt="Diagram Struktur Fondasi Tree Inversi dan DOM Tree HTML" width="800" height="auto">
+                    
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">Gambar 1: Struktur Fondasi Tree Inversi dan DOM Tree HTML</p>
+                </div>
+
+                <h3>Terminologi Penting</h3>
+                <div class="operation-grid">
+                    <div class="operation-item">
+                        <code>Node</code>
+                        <p>Simpul atau bagian fundamental utama yang berfungsi sebagai wadah penyimpan entitas nilai data.</p>
+                    </div>
+                    <div class="operation-item">
+                        <code>Edge</code>
+                        <p>Garis berarah yang mengaitkan hubungan relasi spesifik di antara dua buah simpul node.</p>
+                    </div>
+                    <div class="operation-item">
+                        <code>Root</code>
+                        <p>Satu-satunya node puncak tertinggi yang tidak memiliki garis masuk (no incoming edges).</p>
+                    </div>
+                    <div class="operation-item">
+                        <code>Leaf Node</code>
+                        <p>Simpul bagian paling ujung terminal yang sudah tidak bercabang atau tidak memiliki anak (children).</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="content-card">
+                <h2>Parameter Ukuran Pohon & Kategori</h2>
+                <p>Pengukuran kedalaman hierarki suatu entitas dihitung menggunakan konsep tingkatan berikut:</p>
+                <ul>
+                    <li><strong>Level:</strong> Jumlah lompatan edge yang dilewati, dihitung dari simpul root utama menuju node tujuan. Secara aksioma, ketetapan level root bernilai <code class="inline">0</code>.</li>
+                    <li><strong>Height (Tinggi Pohon):</strong> Nilai level maksimum mutlak paling dalam yang berhasil dicapai oleh simpul daun di dalam suatu struktur pohon.</li>
+                </ul>
+                
+                <h3>Kategori Binary Tree</h3>
+                <p>Pohon diklasifikasikan sebagai <strong>Binary Tree (Pohon Biner)</strong> apabila setiap simpul penampung datanya dibatasi hanya boleh memiliki <strong>maksimal dua cabang anak saja</strong> (left child dan right child).</p>
+            </article>
+
+            <article class="content-card">
+                <h2>Mekanisme Penelusuran Pohon (Tree Traversals)</h2>
+                <p>Proses mengunjungi seluruh node pohon biner secara terstruktur terbagi menjadi tiga metode rekursif utama:</p>
+                <ol>
+                    <li><strong>Preorder:</strong> Kunjungi simpul root terlebih dahulu, lalu telusuri cabang kiri, kemudian cabang kanan.</li>
+                    <li><strong>Inorder:</strong> Telusuri cabang kiri terlebih dahulu, kunjungi simpul root, kemudian telusuri cabang kanan.</li>
+                    <li><strong>Postorder:</strong> Telusuri cabang kiri, telusuri cabang kanan, kemudian baru kunjungi simpul root utama.</li>
+                </ol>
+
+                <div class="illustration-container">
+                    <img src="tree2.png" alt="Diagram Alur Pergerakan Lintas Simpul Preorder Inorder Postorder DOM Tree Parameter" width="800" height="auto">
+                    
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;">Gambar 2: Alur Pergerakan Lintas Simpul pada Metode Preorder, Inorder, dan Postorder</p>
+                </div>
+            </article>
+
+            <article class="content-card">
+                <h2>Implementasi Program (Python)</h2>
+                <p>Mengonstruksi kelas BinaryTree menggunakan representasi referensi objek rekursif untuk anak kiri dan kanan.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span><i class="fa-brands fa-python"></i> binary_tree.py</span>
+                        <span>Python 3</span>
+                    </div>
+<pre><code>class BinaryTree:
+    def __init__(self, rootObj):
+        self.key = rootObj
+        self.leftChild = None  # Cabang anak kiri
+        self.rightChild = None # Cabang anak kanan
+
+    def insertLeft(self, newNode):
+        if self.leftChild == None:
+            self.leftChild = BinaryTree(newNode) # Jika kosong, buat simpul baru
+        else:
+            t = BinaryTree(newNode) # Sisipkan di tengah jika sudah ada isi
+            t.leftChild = self.leftChild
+            self.leftChild = t
+
+    def insertRight(self, newNode):
+        if self.rightChild == None:
+            self.rightChild = BinaryTree(newNode)
+        else:
+            t = BinaryTree(newNode)
+            t.rightChild = self.rightChild
+            self.rightChild = t
+
+    def getLeftChild(self):
+        return self.leftChild # Ambil objek anak kiri
+
+    def getRightChild(self):
+        return self.rightChild # Ambil objek anak kanan
+
+    def getRootVal(self):
+        return self.key # Ambil isi nilai kunci
+
+# --- Mekanisme Penelusuran Rekursif (Traversal) ---
+def preorder(tree):
+    if tree != None:
+        print(tree.getRootVal(), end=" ") # Kunjungi Root
+        preorder(tree.getLeftChild())     # Telusuri Kiri
+        preorder(tree.getRightChild())    # Telusuri Kanan
+
+def inorder(tree):
+    if tree != None:
+        inorder(tree.getLeftChild())      # Telusuri Kiri
+        print(tree.getRootVal(), end=" ") # Kunjungi Root
+        inorder(tree.getRightChild())     # Telusuri Kanan
+
+# --- Uji Coba Bangun Pohon ---
+t = BinaryTree("A")
+t.insertLeft("B")
+t.insertRight("C")
+print("Penelusuran Inorder:")
+inorder(t)</code></pre>
+                </div>
+            </article>
+
+            <article class="content-card">
+                <div class="summary-box">
+                    <h4><i class="fa-solid fa-thumbtack"></i>Rangkuman Materi Tree</h4>
+                    <ul>
+                        <li><strong>Struktur:</strong> Hierarki satu induk utama (Root) ke banyak anak (Branches/Leaves).</li>
+                        <li><strong>Aturan Biner:</strong> Batas muatan anak maksimal berjumlah dua (kiri dan kanan).</li>
+                        <li><strong>Penelusuran:</strong> Preorder (Root-Kiri-Kanan), Inorder (Kiri-Root-Kanan), dan Postorder (Kiri-Kanan-Root).</li>
+                        <li><strong>Manfaat Kasus:</strong> Struktur berkas OS, DOM website, berkas JSON/XML, dan Parse Tree kalkulator logika.</li>
+                    </ul>
+                </div>
+            </article>
+        </div>
+    </main>
+</body>
+</html>
