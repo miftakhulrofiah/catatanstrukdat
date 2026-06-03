@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Struktur Data - Infix ke Prefix</title>
+<<<<<<< HEAD
     <!-- FontAwesome untuk Ikon -->
+=======
+>>>>>>> origin/gh-pages
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -346,8 +349,11 @@
             <li><a href="selectionsort.html"><i class="fa-solid fa-arrow-down-short-wide"></i>Selection Sort</a></li>
             <li><a href="insertionsort.html"><i class="fa-solid fa-arrow-down-short-wide"></i>Insertion Sort</a></li>
             <li><a href="hashing.html"><i class="fa-solid fa-hashtag"></i>Hashing</a></li>
+<<<<<<< HEAD
             <li><a href="linkedlist.html"><i class="fa-solid fa-link"></i>Linked List</a></li>
             <li><a href="tree.html"><i class="fa-solid fa-tree"></i>Tree</a></li>
+=======
+>>>>>>> origin/gh-pages
         </ul>
     </aside>
 
@@ -370,7 +376,11 @@
                     </div>
                     <div class="operation-item">
                         <code>Langkah 2</code>
+<<<<<<< HEAD
                         <p><strong>Tukar</strong> posisi kurung: "(" menjadi ")" dan ")" menjadi "(".</p>
+=======
+                        <p><strong>Tukar</strong> posisi kurung: "(" menjadi ")" and ")" menjadi "(".</p>
+>>>>>>> origin/gh-pages
                     </div>
                     <div class="operation-item">
                         <code>Langkah 3</code>
@@ -425,7 +435,11 @@ def infix_to_prefix(expression):
         else: temp += char
     expression = temp
 
+<<<<<<< HEAD
     # 3. Proses Postfix
+=======
+    # 3. Proses Postfix Modifikasi
+>>>>>>> origin/gh-pages
     stack, postfix = [], ""
     for char in expression:
         if char.isalnum():
@@ -437,7 +451,13 @@ def infix_to_prefix(expression):
                 postfix += stack.pop()
             stack.pop()
         else:
+<<<<<<< HEAD
             while (stack and precedence(char) < precedence(stack[-1])):
+=======
+            # Menggunakan '>' alih-alih '>=' karena urutan asosiatif 
+            # operator tingkat sama menjadi terbalik saat diproses dari kanan
+            while stack and precedence(char) < precedence(stack[-1]):
+>>>>>>> origin/gh-pages
                 postfix += stack.pop()
             stack.append(char)
 
